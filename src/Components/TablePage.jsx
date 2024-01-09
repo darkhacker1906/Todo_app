@@ -1,25 +1,16 @@
-import React from "react";
-import {
-  TableContainer,
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
-  Paper,
-  Box,
-  Hidden,
-} from "@mui/material";
+import React, { useId } from "react";
+import { TableContainer,Table,TableBody,TableRow,TableCell,Paper,Box} from "@mui/material";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import EditCalendarOutlined from "@mui/icons-material/EditCalendarOutlined";
 
 function TablePage({ arr, deleteTodo, setTodo }) {
   return (
-    <Box sx={{ m: "2%",wordBreak:'break-word' }}>
-      <TableContainer component={Paper}>
+    <Box sx={{ m: "2%" }}>
+      <TableContainer component={Paper} sx={{ wordBreak: "break-word" }}>
         <Table id="todos">
           <TableBody>
-            {arr.map((item, index) => (
-              <TableRow key={index}>
+            {arr.map((item, id) => (
+              <TableRow key={id}>
                 <TableCell>
                   <Box
                     sx={{
@@ -28,10 +19,10 @@ function TablePage({ arr, deleteTodo, setTodo }) {
                       width: "99%",
                     }}
                   >
-                    {item.text}
+                    {item}
                     <Box sx={{ display: "flex", alignItems: "center" }}>
-                      <DeleteOutlinedIcon onClick={() => deleteTodo(item.id)} />
-                      <EditCalendarOutlined onClick={() => setTodo(index)} />
+                      <DeleteOutlinedIcon onClick={() => deleteTodo(id)} />
+                      <EditCalendarOutlined onClick={() => setTodo(id)} />
                     </Box>
                   </Box>
                 </TableCell>
