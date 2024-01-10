@@ -16,8 +16,9 @@ function Home() {
         updatedArr[editIndex] = { id: updatedArr[editIndex].id, text: data }; 
         setArr(updatedArr);
         setEditIndex(null);
-      } else {
-        setArr([...arr, { id: id, text: data }]);
+      }
+       else {
+        setArr([...arr, {  text: data }]);
       }
       setData("");
     }
