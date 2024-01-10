@@ -2,56 +2,75 @@ import React, { useState } from "react";
 import { Box, Button, TextField } from "@mui/material";
 import TablePage from "../Components/TablePage";
 import { Typography } from "@mui/material";
-import { useId } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 function Home() {
   const [data, setData] = useState("");
-  const [editIndex, setEditIndex] = useState(null);
   const [arr, setArr] = useState([]);
-  const id = useId();
+  const [toggle, setToggle] = useState(true);
+  const [IsEditItem, setIsEditItem] = useState(null);
 
-  const set_table = (data) => {
-    if (data !== "") {
-      if (editIndex !== null) {
-        let updatedArr = [...arr];
-        updatedArr[editIndex] = data;
-        setArr(updatedArr);
-        setEditIndex(null);
-      } else {
-        setArr([...arr, data]);
+  const set_table = () => {
+    if (!data) {
+    }
+     else if (data && !toggle) {
+      setArr((prevArr) =>
+        prevArr.map((elem) => {
+          if (elem.id === IsEditItem) {
+            return { ...elem, name: data };
+          }
+          return elem;
+        })
+      );
+      setToggle(true);
+      setIsEditItem(null);
+    } else {
+      if (data != "") {
+        const allInputData = { id: uuidv4(), name: data };
+        setArr([...arr, allInputData]);
+        setData("");
       }
-      setData("");
     }
   };
 
-  const delete_todo = (id) => {
-    let reduced_todo = [...arr];
-    reduced_todo.splice(id, 1);
-    setArr(reduced_todo);
+  const delete_todo = (index) => {
+    const updateditems = arr.filter((item) => {
+      return index !== item.id;
+    });
+    setArr(updateditems);
   };
 
-  const set_todo = (id) => {
-    setEditIndex(id);
-    setData(arr[id]);
+  const editItem = (id) => {
+    let newEditItem = arr.find((item) => {
+      return item.id === id;
+    });
+    setToggle(false);
+    console.log(newEditItem);
+    setData(newEditItem.name);
+    setIsEditItem(id);
   };
   const handleKeyEnter = (event) => {
     if (event.key === "Enter") {
-      set_table(data);
+      set_table();
     }
   };
 
+  const handleCancel = () => {
+    setData("");
+    setToggle(true);
+    setIsEditItem(null);
+  };
+
   return (
-    <Box sx={{ display: "flex", justifyContent: "center" }}>
-      <Box sx={{ width: "60%" }}>
-        <Typography
-          variant="h3"
-          sx={{ m: "20px", textAlign: "center", overflow: "hidden" }}
-        >
+    <Box
+      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+    >
+      <Box sx={{ width: "60%", overflowX: "hidden" }}>
+        <Typography variant="h3" sx={{ m: "20px", textAlign: "center" }}>
           ToDo App
         </Typography>
         <Box sx={{ display: "flex", m: "20px" }}>
           <TextField
-            id={id}
             variant="filled"
             onChange={(e) => setData(e.target.value)}
             fullWidth
@@ -59,42 +78,35 @@ function Home() {
             value={data}
             onKeyDown={handleKeyEnter}
           />
-          {editIndex !== null ? (
+
+          {toggle ? (
+            <Button
+              variant="contained"
+              sx={{ fontWeight: "bold", fontSize: "1em" }}
+              onClick={set_table}
+            >
+              Submit
+            </Button>
+          ) : (
             <>
               <Button
                 variant="contained"
-                sx={{ fontWeight: "bold", fontSize: ".8em" }}
-                onClick={() => set_table(data)}
+                sx={{ fontWeight: "bold", fontSize: ".8em", mr: "2px" }}
+                onClick={set_table}
               >
                 Update
               </Button>
               <Button
                 variant="contained"
-                sx={{
-                  fontWeight: "bold",
-                  fontSize: ".8em",
-                  marginLeft: "10px",
-                }}
-                onClick={() => {
-                  setEditIndex(null);
-                  setData("");
-                }}
+                sx={{ fontWeight: "bold", fontSize: ".8em" }}
+                onClick={handleCancel}
               >
                 Cancel
               </Button>
             </>
-          ) : (
-            <Button
-              variant="contained"
-              sx={{ fontWeight: "bold", fontSize: "1em" }}
-              onClick={() => set_table(data)}
-            >
-              Submit
-            </Button>
           )}
         </Box>
-
-        <TablePage arr={arr} deleteTodo={delete_todo} setTodo={set_todo} />
+        <TablePage arr={arr} deleteTodo={delete_todo} editTodo={editItem} />
       </Box>
     </Box>
   );
