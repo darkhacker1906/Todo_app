@@ -2,36 +2,54 @@ import React, { useState } from "react";
 import { Box, Button, TextField } from "@mui/material";
 import TablePage from "../Components/TablePage";
 import { Typography } from "@mui/material";
-import { useId } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { FormControlLabel } from "@mui/material";
 
 function Home() {
   const [data, setData] = useState("");
   const [arr, setArr] = useState([]);
-  const id = uuidv4();
+  const [toggle, setToggle] = useState(true);
+  const [IsEditItem, setIsEditItem] = useState(null);
+  const [checked, setChecked] = useState(false);
 
-  const set_table = (data) => {
-    if (data !== "") {
-      if (editIndex !== null) {
-        let updatedArr = [...arr];
-        updatedArr[editIndex] = { id: updatedArr[editIndex].id, text: data }; 
-        setArr(updatedArr);
-        setEditIndex(null);
-      }
-       else {
-        setArr([...arr, {  text: data }]);
-      }
+  const set_table = () => {
+    if (!data) {
+    } else if (data && !toggle) {
+      setArr((prevArr) =>
+        prevArr.map((elem) => {
+          if (elem.id === IsEditItem) {
+            return { ...elem, name: data };
+          }
+          return elem;
+        })
+      );
+      setToggle(true);
+      setIsEditItem(null);
       setData("");
+    } else {
+      if (data != "") {
+        const allInputData = { id: uuidv4(), name: data, check: false };
+        setArr([...arr, allInputData]);
+        setData("");
+      }
     }
   };
 
-  const delete_todo = (id) => {
-    let reduced_todo = arr.filter((item) => item.id !== id);
-    setArr(reduced_todo);
+  const delete_todo = (index) => {
+    const updateditems = arr.filter((item) => {
+      return index !== item.id;
+    });
+    setArr(updateditems);
   };
 
-  const set_todo = (id) => {
-    setEditIndex(id);
-    setData(arr[id].text);
+  const editItem = (id) => {
+    let newEditItem = arr.find((item) => {
+      return item.id === id;
+    });
+    setToggle(false);
+    console.log(newEditItem);
+    setData(newEditItem.name);
+    setIsEditItem(id);
   };
   const handleKeyEnter = (event) => {
     if (event.key === "Enter") {
@@ -44,36 +62,69 @@ function Home() {
     setToggle(true);
     setIsEditItem(null);
   };
+  const check_change = (id) => {
+    const checkData=arr.map((e)=>{
+      if(e.id==id){
+        return {...e,check:!e.check};
+      }
+      return e;
+    })
+    setArr(checkData);
+  };
+  console.log(arr);
 
   return (
-    <Box sx={{display:"flex",alignItems:"center",justifyContent:"center"}}>
-
-    <Box sx={{width:"60%",overflowX:"hidden"}}>
-      <Typography
-        variant="h3"
-        sx={{ m: "20px", textAlign: "center" }}
-        >
-        ToDo App
-      </Typography>
-      <Box sx={{ display: "flex", m: "20px" }}>
-        <TextField
-          variant="filled"
-          onChange={(e) => setData(e.target.value)}
-          fullWidth
-          label={"Enter your Todo"}
-          value={data}
-          onKeyDown={handleKeyEnter}
+    <Box
+      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+    >
+      <Box sx={{ width: "60%", overflowX: "hidden" }}>
+        <Typography variant="h3" sx={{ m: "20px", textAlign: "center" }}>
+          ToDo App
+        </Typography>
+        <Box sx={{ display: "flex", m: "20px" }}>
+          <TextField
+            variant="filled"
+            onChange={(e) => setData(e.target.value)}
+            fullWidth
+            label={"Enter your Todo"}
+            value={data}
+            onKeyDown={handleKeyEnter}
           />
-        <Button
-          variant="contained"
-          sx={{ fontWeight: "bold", fontSize: "1em" }}
-          onClick={() => set_table(data)}
-          >
-         Submit
-        </Button>
+
+          {toggle ? (
+            <Button
+              variant="contained"
+              sx={{ fontWeight: "bold", fontSize: "1em" }}
+              onClick={set_table}
+            >
+              Submit
+            </Button>
+          ) : (
+            <>
+              <Button
+                variant="contained"
+                sx={{ fontWeight: "bold", fontSize: ".8em", mr: "2px" }}
+                onClick={set_table}
+              >
+                Update
+              </Button>
+              <Button
+                variant="contained"
+                sx={{ fontWeight: "bold", fontSize: ".8em" }}
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
+            </>
+          )}
+        </Box>
+        <TablePage
+          arr={arr}
+          deleteTodo={delete_todo}
+          editTodo={editItem}
+          checkChange={check_change}
+        />
       </Box>
-      <TablePage arr={arr} deleteTodo={delete_todo} setTodo={set_todo} />
-            </Box>
     </Box>
   );
 }
