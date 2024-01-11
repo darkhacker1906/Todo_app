@@ -3,14 +3,13 @@ import { Box, Button, TextField } from "@mui/material";
 import TablePage from "../Components/TablePage";
 import { Typography } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
-import { FormControlLabel } from "@mui/material";
 
 function Home() {
   const [data, setData] = useState("");
   const [arr, setArr] = useState([]);
   const [toggle, setToggle] = useState(true);
   const [IsEditItem, setIsEditItem] = useState(null);
-  const [checked, setChecked] = useState(false);
+  const [filterType,setFilterType]=useState("all");
 
   const set_table = () => {
     if (!data) {
@@ -28,7 +27,7 @@ function Home() {
       setData("");
     } else {
       if (data != "") {
-        const allInputData = { id: uuidv4(), name: data, check: false };
+        const allInputData = { id: uuidv4(), name: data};
         setArr([...arr, allInputData]);
         setData("");
       }
@@ -44,10 +43,9 @@ function Home() {
 
   const editItem = (id) => {
     let newEditItem = arr.find((item) => {
-      return item.id === id;
+      return (item.id === id );
     });
     setToggle(false);
-    console.log(newEditItem);
     setData(newEditItem.name);
     setIsEditItem(id);
   };
@@ -71,8 +69,20 @@ function Home() {
     })
     setArr(checkData);
   };
-  console.log(arr);
 
+  const filterItems=()=>{
+    switch(filterType){
+      case "all":
+        return arr;
+      case"completed":
+        return arr.filter((item)=>item.check);
+      case "incomplete":
+      return arr.filter((item)=>!item.check);
+    default:
+      return arr;
+    }
+
+  };
   return (
     <Box
       sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
@@ -81,7 +91,7 @@ function Home() {
         <Typography variant="h3" sx={{ m: "20px", textAlign: "center" }}>
           ToDo App
         </Typography>
-        <Box sx={{ display: "flex", m: "20px" }}>
+        <Box sx={{ display: "flex", mb: "20px" }}>
           <TextField
             variant="filled"
             onChange={(e) => setData(e.target.value)}
@@ -118,8 +128,30 @@ function Home() {
             </>
           )}
         </Box>
+        <Box sx={{display:"inline-block"}}>
+        <Button variant="contained"
+          sx={{ fontWeight: "bold", fontSize: "1em", mr: "10px" }}
+          onClick={()=>{setFilterType("all")}}>
+          All
+        </Button>
+
+        <Button variant="contained"
+          sx={{ fontWeight: "bold", fontSize: "1em", mr: "10px" }}
+          onClick={()=>{setFilterType("completed")}}
+        >
+          Completed
+        </Button>
+        <Button variant="contained"
+          sx={{ fontWeight: "bold", fontSize: "1em", mr: "10px" }}
+          onClick={()=>{setFilterType("incomplete")}}
+        >
+          Incompleted
+        </Button>
+        </Box>
+       
+
         <TablePage
-          arr={arr}
+          arr={filterItems()}
           deleteTodo={delete_todo}
           editTodo={editItem}
           checkChange={check_change}
