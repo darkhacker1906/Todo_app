@@ -5,15 +5,14 @@ import EditCalendarOutlined from "@mui/icons-material/EditCalendarOutlined";
 import {FormControlLabel,Checkbox} from "@mui/material";
 
 function TablePage({ arr, deleteTodo, editTodo ,checkChange}) {
-  console.log(arr);
   return (
-    <Box sx={{ m: "2%", wordBreak: "break-word" }}>
+    <Box sx={{ mt: "2%", wordBreak: "break-word" }}>
       <TableContainer component={Paper}>
         <Table id="todos">
           <TableBody>
             {arr.map((item) => (
               <TableRow key={item.id}>
-                <TableCell>
+                <TableCell >
                   <Box
                     sx={{
                       display: "flex",
@@ -24,14 +23,15 @@ function TablePage({ arr, deleteTodo, editTodo ,checkChange}) {
                     <Box>
                    <FormControlLabel
                    control={<Checkbox />}
-                    label={item.check ?  "Completed": "Incomplete"}
+                    // label={item.check ?  "Completed": "Incomplete"}
                     onClick={()=>checkChange(item.id)}/>
-                 
+
                     {item.name}
                     </Box>
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                       <DeleteOutlinedIcon onClick={() => deleteTodo(item.id)} />
-                      <EditCalendarOutlined onClick={() => editTodo(item.id)} />
+                      <EditCalendarOutlined onClick={() => editTodo(item.id)} sx={{mr:"10px"}} />
+                      {item.check ? <Box sx={{background:"#a5dc86",color:"black",fontWeight:"border",borderRadius:"10px",p:"2px 3px 2px 3px"}}>Completed</Box> : ""}
                     </Box>
                   </Box>
                 </TableCell>
