@@ -10,15 +10,23 @@ function Home() {
   const [toggle, setToggle] = useState(true);
   const [IsEditItem, setIsEditItem] = useState(null);
   const [filterType, setFilterType] = useState("all");
+  const [errors,setErrors]=useState("");
 
   const set_table = () => {
     if (!data) {
-    } else if (data && !toggle) {
+      setErrors({data:"Please enter data in this field"})
+      return;
+    } 
+    else{
+      setErrors("");
+    }
+     if (data.trim()!=="" && !toggle) {
       setArr((prevArr) =>
         prevArr.map((elem) => {
-          if (elem.id === IsEditItem) {
-            return { ...elem, name: data,check:false };
+          if (elem.id === IsEditItem && data!=="" ) {
+            return { ...elem, name: data };
           }
+          setData("");
           return elem;
         })
       );
@@ -26,9 +34,13 @@ function Home() {
       setIsEditItem(null);
       setData("");
     } else {
-      if (data != "") {
+      if (data && data.trim()!=="") {
         const allInputData = { id: uuidv4(), name: data };
         setArr([...arr, allInputData]);
+        setData(""); 
+      }
+      else {
+        setErrors({ data: "Please enter  data in this field" });
         setData("");
       }
     }
@@ -39,6 +51,7 @@ function Home() {
       return index !== item.id;
     });
     setArr(updateditems);
+    setErrors("");
   };
 
   const editItem = (id) => {
@@ -48,6 +61,7 @@ function Home() {
     setToggle(false);
     setData(newEditItem.name);
     setIsEditItem(id);
+    setErrors("");
   };
   const handleKeyEnter = (event) => {
     if (event.key === "Enter") {
@@ -59,6 +73,7 @@ function Home() {
     setData("");
     setToggle(true);
     setIsEditItem(null);
+    setErrors("");
   };
   const check_change = (id) => {
     setArr((prevTodos)=>
@@ -86,14 +101,16 @@ function Home() {
         return arr;
     }
   };
+
   return (
     <Box
       sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
     >
-      <Box sx={{ width:{lg:"60%",sm:"80%",md:"100%"},  overflowX: "hidden" }}>
-        <Typography sx={{m:"20px",textAlign:"center",fontSize:{lg:"3rem",sm:"2.5",md:"2.4rem"}}}>ToDo App</Typography>
+      <Box sx={{ width:{xs:"98%",lg:"60%",sm:"86%",md:"90%"/*xs:"100%",sm:"95%",md:"90%",lg:"60%"*/},  overflowX: "hidden" }}>
+        <Typography sx={{m:"20px",textAlign:"center",color:"#56676d",fontSize:{xs:"2rem",lg:"3rem",sm:"2.5",md:"2.4rem"}}}>ToDo App</Typography>
         {/* ,fontSize:{lg:"1em",md:".8em",sm:".7em"} */}
         <Box sx={{ display: "flex", mb: "20px" }}>
+
           <TextField
             variant="filled"
             onChange={(e) => setData(e.target.value)}
@@ -101,12 +118,15 @@ function Home() {
             label={"Enter your Todo"}
             value={data}
             onKeyDown={handleKeyEnter}
+            error={errors.data}
+            helperText={errors.data}
           />
+   
 
           {toggle ? (
             <Button
               variant="contained"
-              sx={{ fontWeight: "500",fontSize:{xs:".6em",sm:".7em",md:".8em",lg:"1em"}  }}
+              sx={{ fontWeight: "500",fontSize:{xs:".6em",sm:".7em",md:".8em",lg:"1em"} ,height:"55px" }}
               onClick={set_table}
             >
               Submit
@@ -115,25 +135,28 @@ function Home() {
             <>
               <Button
                 variant="contained"
-                sx={{ fontWeight: "bold",fontSize:{xs:".6em",sm:".7em",md:".8em",lg:"1em"} }}
+                sx={{ fontWeight: "bold",fontSize:{xs:".6em",sm:".7em",md:".8em",lg:"1em"},mr:'4px',height:"55px" }}
                 onClick={set_table}
               >
                 Update
               </Button>
               <Button
                 variant="contained"
-                sx={{ fontWeight: "bold", fontSize:{xs:".6em",sm:".7em",md:".8em",lg:"1em"} }}
+                sx={{ fontWeight: "bold", fontSize:{xs:".6em",sm:".7em",md:".8em",lg:"1em"},height:"55px" }}
                 onClick={handleCancel}
               >
                 Cancel
               </Button>
             </>
           )}
+                 
         </Box>
-        <Box sx={{ display: "inline-block" }}>
+ 
+        {arr.length>0 &&<Box sx={{ display: "flex",justifyContent:{xs:"space-evenly",sm:"flex-start",md:"flex-start",lg:"flex-start"} }}>
+          
           <Button
             variant="contained"
-            sx={{ fontSize:{xs:".6em",sm:".7em",md:".8em",lg:"1em"}, mr: "10px" }}
+            sx={{ fontSize:{xs:".7em",sm:".8em",md:".9em",lg:"1em"}, mr: {lg:"10px",xs:"18px"},width:"130px" }}
             onClick={() => {
               setFilterType("all");
             }}
@@ -141,9 +164,10 @@ function Home() {
             All
           </Button>
 
+
           <Button
             variant="contained"
-            sx={{  fontSize:{xs:".6em",sm:".7em",md:".8em",lg:"1em"}, mr: "10px" }}
+            sx={{  fontSize:{xs:".7em",sm:".8em",md:".9em",lg:"1em"}, mr: {lg:"10px",xs:"18px"},width:"130px"}}
             onClick={() => {
               setFilterType("completed");
             }}
@@ -152,7 +176,7 @@ function Home() {
           </Button>
           <Button
             variant="contained"
-            sx={{fontSize:{xs:".6em",sm:".7em",md:".8em",lg:"1em"}, mr: "10px" }}
+            sx={{fontSize:{xs:".7em",sm:".8em",md:".9em",lg:"1em"},width:"130px" }}
             onClick={() => {
               setFilterType("incomplete");
             }}
@@ -160,6 +184,8 @@ function Home() {
             Incomplete
           </Button>
         </Box>
+          }
+        
 
         <TablePage
           arr={filterItems()}

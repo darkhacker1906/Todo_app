@@ -31,10 +31,10 @@ function TablePage({ arr, deleteTodo, editTodo, checkChange }) {
                       {item.name}
                     </Box>
                     <Box sx={{ display: "flex", alignItems: "center" }}>
-                      <DeleteOutlinedIcon onClick={() => deleteTodo(item.id)} />
+                      <DeleteOutlinedIcon onClick={() => deleteTodo(item.id)} sx={{color:"#FF0000"}}/>
                       <EditCalendarOutlined
                         onClick={() => editTodo(item.id)}
-                        sx={{ mr: "10px" }}
+                        sx={{ mr: "10px",color:'#6969e5' }}
                       />
                       {item.check ? (
                         <Box
