@@ -10,20 +10,19 @@ function Home() {
   const [toggle, setToggle] = useState(true);
   const [IsEditItem, setIsEditItem] = useState(null);
   const [filterType, setFilterType] = useState("all");
-  const [errors,setErrors]=useState("");
+  const [errors, setErrors] = useState("");
 
   const set_table = () => {
     if (!data) {
-      setErrors({data:"Please enter data in this field"})
+      setErrors({ data: "Please enter data in this field" });
       return;
-    } 
-    else{
+    } else {
       setErrors("");
     }
-     if (data.trim()!=="" && !toggle) {
+    if (data.trim() !== "" && !toggle) {
       setArr((prevArr) =>
         prevArr.map((elem) => {
-          if (elem.id === IsEditItem && data!=="" ) {
+          if (elem.id === IsEditItem && data !== "") {
             return { ...elem, name: data };
           }
           setData("");
@@ -34,12 +33,11 @@ function Home() {
       setIsEditItem(null);
       setData("");
     } else {
-      if (data && data.trim()!=="") {
+      if (data && data.trim() !== "") {
         const allInputData = { id: uuidv4(), name: data };
         setArr([...arr, allInputData]);
-        setData(""); 
-      }
-      else {
+        setData("");
+      } else {
         setErrors({ data: "Please enter  data in this field" });
         setData("");
       }
@@ -76,17 +74,9 @@ function Home() {
     setErrors("");
   };
   const check_change = (id) => {
-    setArr((prevTodos)=>
-      prevTodos.map((e)=>e.id==id?{...e, check:!e.check}:e));
-    // const checkData = arr.map((e) => {
-    //   if (e.id == id) {
-    //     return { ...e, check: !e.check };
-    //   }
-    //   else{
-    //     return e;
-    //   }
-    // });
-    // setArr(checkData);
+    setArr((prevTodos) =>
+      prevTodos.map((e) => (e.id == id ? { ...e, check: !e.check } : e))
+    );
   };
 
   const filterItems = () => {
@@ -94,24 +84,48 @@ function Home() {
       case "all":
         return arr;
       case "completed":
-        return arr.filter((item) => item.check);
+        const checked_data = arr.filter((item) => item.check);
+        return checked_data;
       case "incomplete":
-        return arr.filter((item) => !item.check);
+        const unchecked_data = arr.filter((item) => !item.check);
+        return unchecked_data;
+
       default:
         return arr;
     }
   };
-
+  const delete_check = () => {
+    const checkedData = arr.filter((item) => {return !item.check});
+    setArr(checkedData)
+  };
   return (
     <Box
       sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
     >
-      <Box sx={{ width:{xs:"98%",lg:"60%",sm:"86%",md:"90%"/*xs:"100%",sm:"95%",md:"90%",lg:"60%"*/},  overflowX: "hidden" }}>
-        <Typography sx={{m:"20px",textAlign:"center",color:"#56676d",fontSize:{xs:"2rem",lg:"3rem",sm:"2.5",md:"2.4rem"}}}>ToDo App</Typography>
-        {/* ,fontSize:{lg:"1em",md:".8em",sm:".7em"} */}
+      <Box
+        sx={{
+          width: {
+            xs: "98%",
+            lg: "60%",
+            sm: "86%",
+            md: "90%",
+          },
+          overflowX: "hidden",
+        }}
+      >
+        <Typography
+          sx={{
+            m: "20px",
+            textAlign: "center",
+            color: "#56676d",
+            fontSize: { xs: "2rem", lg: "3rem", sm: "2.5", md: "2.4rem" },
+          }}
+        >
+          ToDo App
+        </Typography>
         <Box sx={{ display: "flex", mb: "20px" }}>
-
           <TextField
+            size="small"
             variant="filled"
             onChange={(e) => setData(e.target.value)}
             fullWidth
@@ -121,12 +135,15 @@ function Home() {
             error={errors.data}
             helperText={errors.data}
           />
-   
 
           {toggle ? (
             <Button
               variant="contained"
-              sx={{ fontWeight: "500",fontSize:{xs:".6em",sm:".7em",md:".8em",lg:"1em"} ,height:"55px" }}
+              sx={{
+                fontWeight: "500",
+                fontSize: { xs: ".6em", sm: ".7em", md: ".8em", lg: "1em" },
+                height: "48px",
+              }}
               onClick={set_table}
             >
               Submit
@@ -135,57 +152,93 @@ function Home() {
             <>
               <Button
                 variant="contained"
-                sx={{ fontWeight: "bold",fontSize:{xs:".6em",sm:".7em",md:".8em",lg:"1em"},mr:'4px',height:"55px" }}
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: { xs: ".6em", sm: ".7em", md: ".8em", lg: "1em" },
+                  mr: "4px",
+                  height: "48px",
+                }}
                 onClick={set_table}
               >
                 Update
               </Button>
               <Button
                 variant="contained"
-                sx={{ fontWeight: "bold", fontSize:{xs:".6em",sm:".7em",md:".8em",lg:"1em"},height:"55px" }}
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: { xs: ".6em", sm: ".7em", md: ".8em", lg: "1em" },
+                  height: "48px",
+                }}
                 onClick={handleCancel}
               >
                 Cancel
               </Button>
             </>
           )}
-                 
         </Box>
- 
-        {arr.length>0 &&<Box sx={{ display: "flex",justifyContent:{xs:"space-evenly",sm:"flex-start",md:"flex-start",lg:"flex-start"} }}>
-          
-          <Button
-            variant="contained"
-            sx={{ fontSize:{xs:".7em",sm:".8em",md:".9em",lg:"1em"}, mr: {lg:"10px",xs:"18px"},width:"130px" }}
-            onClick={() => {
-              setFilterType("all");
-            }}
-          >
-            All
-          </Button>
 
-
-          <Button
-            variant="contained"
-            sx={{  fontSize:{xs:".7em",sm:".8em",md:".9em",lg:"1em"}, mr: {lg:"10px",xs:"18px"},width:"130px"}}
-            onClick={() => {
-              setFilterType("completed");
+        {arr.length > 0 && (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              justifyContent: "space-between",
             }}
           >
-            Completed
-          </Button>
-          <Button
-            variant="contained"
-            sx={{fontSize:{xs:".7em",sm:".8em",md:".9em",lg:"1em"},width:"130px" }}
-            onClick={() => {
-              setFilterType("incomplete");
-            }}
-          >
-            Incomplete
-          </Button>
-        </Box>
-          }
-        
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Button
+                variant="contained"
+                sx={{
+                  fontSize: { xs: ".6em", sm: ".8em", md: ".9em", lg: "1em" },
+                  mr: { lg: "10px", xs: "3px" },
+                }}
+                onClick={() => {
+                  setFilterType("all");
+                }}
+              >
+                All
+              </Button>
+              <Button
+                variant="contained"
+                sx={{
+                  fontSize: { xs: ".6em", sm: ".8em", md: ".9em", lg: "1em" },
+                  mr: { lg: "10px", xs: "3px" },
+                  width: "120px",
+                }}
+                onClick={() => {
+                  setFilterType("completed");
+                }}
+              >
+                Completed
+              </Button>
+              <Button
+                variant="contained"
+                sx={{
+                  fontSize: { xs: ".6em", sm: ".8em", md: ".9em", lg: "1em" },
+                  mr: { lg: "10px", xs: "3px" },
+                  width: "120px",
+                }}
+                onClick={() => {
+                  setFilterType("incomplete");
+                }}
+              >
+                Incomplete
+              </Button>
+            </Box>
+            <Box>
+              <Button
+                sx={{
+                  fontSize: { xs: ".5em", sm: ".8em", md: ".9em", lg: "1em" },
+                  mt: { xs: "10px", sm: "0px", md: "0px" },
+                }}
+                variant="contained"
+                onClick={delete_check}
+              >
+                Delete All
+              </Button>
+            </Box>
+          </Box>
+        )}
 
         <TablePage
           arr={filterItems()}

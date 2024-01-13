@@ -11,8 +11,15 @@ function TablePage({ arr, deleteTodo, editTodo, checkChange }) {
         <Table id="todos">
           <TableBody>
             {arr.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>
+              <TableRow
+              sx={{
+                "&:hover": {
+                  backgroundColor: "#d9d9d9"
+                }
+              }
+              }
+              key={item.id}>
+                <TableCell padding="none">
                   <Box
                     sx={{
                       display: "flex",
@@ -24,17 +31,30 @@ function TablePage({ arr, deleteTodo, editTodo, checkChange }) {
                       <FormControlLabel
                         control={<Checkbox checked={item.check} />}
                         
-                        // label={item.check ?  "Completed": "Incomplete"}
                         onClick={() => checkChange(item.id)}
                       />
 
                       {item.name}
                     </Box>
                     <Box sx={{ display: "flex", alignItems: "center" }}>
-                      <DeleteOutlinedIcon onClick={() => deleteTodo(item.id)} sx={{color:"#FF0000"}}/>
+                      <DeleteOutlinedIcon onClick={() => deleteTodo(item.id)}
+                       sx={{
+                         "&:hover": {
+                          cursor:"pointer",
+                          color:"#FF0000"
+                         }
+                       }
+                       }
+                      />
                       <EditCalendarOutlined
                         onClick={() => editTodo(item.id)}
-                        sx={{ mr: "10px",color:'#6969e5' }}
+                        sx={{
+                          "&:hover": {
+                           cursor:"pointer",color:'#6969e5'
+                          },
+                          mr: "10px"
+                        }
+                        }
                       />
                       {item.check ? (
                         <Box
