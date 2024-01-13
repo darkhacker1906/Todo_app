@@ -95,8 +95,10 @@ function Home() {
     }
   };
   const delete_check = () => {
-    const checkedData = arr.filter((item) => {return !item.check});
-    setArr(checkedData)
+    const checkedData = arr.filter((item) => {
+      return !item.check;
+    });
+    setArr(checkedData);
   };
   return (
     <Box

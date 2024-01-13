@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import {TableContainer,Table,TableBody,TableRow,TableCell,Paper,Box} from "@mui/material";
+import {
+  TableContainer,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+  Paper,
+  Box,
+} from "@mui/material";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import EditCalendarOutlined from "@mui/icons-material/EditCalendarOutlined";
 import { FormControlLabel, Checkbox } from "@mui/material";
@@ -12,13 +20,13 @@ function TablePage({ arr, deleteTodo, editTodo, checkChange }) {
           <TableBody>
             {arr.map((item) => (
               <TableRow
-              sx={{
-                "&:hover": {
-                  backgroundColor: "#d9d9d9"
-                }
-              }
-              }
-              key={item.id}>
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "#d9d9d9",
+                  },
+                }}
+                key={item.id}
+              >
                 <TableCell padding="none">
                   <Box
                     sx={{
@@ -30,31 +38,30 @@ function TablePage({ arr, deleteTodo, editTodo, checkChange }) {
                     <Box>
                       <FormControlLabel
                         control={<Checkbox checked={item.check} />}
-                        
                         onClick={() => checkChange(item.id)}
                       />
 
                       {item.name}
                     </Box>
                     <Box sx={{ display: "flex", alignItems: "center" }}>
-                      <DeleteOutlinedIcon onClick={() => deleteTodo(item.id)}
-                       sx={{
-                         "&:hover": {
-                          cursor:"pointer",
-                          color:"#FF0000"
-                         }
-                       }
-                       }
+                      <DeleteOutlinedIcon
+                        onClick={() => deleteTodo(item.id)}
+                        sx={{
+                          "&:hover": {
+                            cursor: "pointer",
+                            color: "#FF0000",
+                          },
+                        }}
                       />
                       <EditCalendarOutlined
                         onClick={() => editTodo(item.id)}
                         sx={{
                           "&:hover": {
-                           cursor:"pointer",color:'#6969e5'
+                            cursor: "pointer",
+                            color: "#6969e5",
                           },
-                          mr: "10px"
-                        }
-                        }
+                          mr: "10px",
+                        }}
                       />
                       {item.check ? (
                         <Box
