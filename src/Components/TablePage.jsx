@@ -7,6 +7,7 @@ import {
   TableCell,
   Paper,
   Box,
+  Stack
 } from "@mui/material";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import EditCalendarOutlined from "@mui/icons-material/EditCalendarOutlined";
@@ -14,7 +15,7 @@ import { FormControlLabel, Checkbox } from "@mui/material";
 
 function TablePage({ arr, deleteTodo, editTodo, checkChange }) {
   return (
-    <Box sx={{ mt: "2%", wordBreak: "break-word" }}>
+    <Stack sx={{ mt: "2%", wordBreak: "break-word" }} spacing={2}>
       <TableContainer component={Paper}>
         <Table id="todos">
           <TableBody>
@@ -28,13 +29,12 @@ function TablePage({ arr, deleteTodo, editTodo, checkChange }) {
                 key={item.id}
               >
                 <TableCell padding="none">
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      width: "99%",
-                    }}
-                  >
+                <Stack
+                direction={{ xs: "column", sm: "row" }}
+                justifyContent="space-between"
+                alignItems={{ xs: "flex-start", sm: "center" }}
+                spacing={{ xs: 1, sm: 0 }}
+>
                     <Box>
                       <FormControlLabel
                         control={<Checkbox checked={item.check} />}
@@ -63,7 +63,7 @@ function TablePage({ arr, deleteTodo, editTodo, checkChange }) {
                           mr: "10px",
                         }}
                       />
-                      {item.check ? (
+                      {item.check && (
                         <Box
                           sx={{
                             background: "#a5dc86",
@@ -75,18 +75,16 @@ function TablePage({ arr, deleteTodo, editTodo, checkChange }) {
                         >
                           Completed
                         </Box>
-                      ) : (
-                        ""
-                      )}
+                      ) }
                     </Box>
-                  </Box>
+                  </Stack>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-    </Box>
+    </Stack>
   );
 }
 

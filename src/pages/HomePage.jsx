@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, TextField,Stack} from "@mui/material";
 import TablePage from "../Components/TablePage";
 import { Typography } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
@@ -75,7 +75,7 @@ function Home() {
   };
   const check_change = (id) => {
     setArr((prevTodos) =>
-      prevTodos.map((e) => (e.id == id ? { ...e, check: !e.check } : e))
+      prevTodos.map((e) => (e.id == id && { ...e, check: !e.check }))
     );
   };
 
@@ -94,6 +94,7 @@ function Home() {
         return arr;
     }
   };
+
   const delete_check = () => {
     const checkedData = arr.filter((item) => {
       return !item.check;
@@ -101,9 +102,7 @@ function Home() {
     setArr(checkedData);
   };
   return (
-    <Box
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-    >
+    <Stack direction="column" alignItems="center" justifyContent="center" spacing={2} >
       <Box
         sx={{
           width: {
@@ -138,56 +137,55 @@ function Home() {
             helperText={errors.data}
           />
 
-          {toggle ? (
-            <Button
-              variant="contained"
-              sx={{
-                fontWeight: "500",
-                fontSize: { xs: ".6em", sm: ".7em", md: ".8em", lg: "1em" },
-                height: "48px",
-              }}
-              onClick={set_table}
-            >
-              Submit
-            </Button>
-          ) : (
-            <>
-              <Button
-                variant="contained"
-                sx={{
-                  fontWeight: "bold",
-                  fontSize: { xs: ".6em", sm: ".7em", md: ".8em", lg: "1em" },
-                  mr: "4px",
-                  height: "48px",
-                }}
-                onClick={set_table}
-              >
-                Update
-              </Button>
-              <Button
-                variant="contained"
-                sx={{
-                  fontWeight: "bold",
-                  fontSize: { xs: ".6em", sm: ".7em", md: ".8em", lg: "1em" },
-                  height: "48px",
-                }}
-                onClick={handleCancel}
-              >
-                Cancel
-              </Button>
-            </>
-          )}
+{toggle && (
+    <Button
+      variant="contained"
+      sx={{
+        fontWeight: "500",
+        fontSize: { xs: ".6em", sm: ".7em", md: ".8em", lg: "1em" },
+        height: "48px",
+      }}
+      onClick={set_table}
+    >
+      Submit
+    </Button>
+  )}
+
+  {!toggle && (
+    <>
+      <Button
+        variant="contained"
+        sx={{
+          fontWeight: "bold",
+          fontSize: { xs: ".6em", sm: ".7em", md: ".8em", lg: "1em" },
+          mr: "4px",
+          height: "48px",
+        }}
+        onClick={set_table}
+      >
+        Update
+      </Button>
+      <Button
+        variant="contained"
+        sx={{
+          fontWeight: "bold",
+          fontSize: { xs: ".6em", sm: ".7em", md: ".8em", lg: "1em" },
+          height: "48px",
+        }}
+        onClick={handleCancel}
+      >
+        Cancel
+      </Button>
+    </>
+  )}
         </Box>
 
         {arr.length > 0 && (
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: { xs: "column", sm: "row" },
-              justifyContent: "space-between",
-            }}
-          >
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+             <Stack
+             direction={{ xs: "column", sm: "row" }}
+             justifyContent="space-between"
+           >
+            <Stack direction="row" spacing={1}>
               <Button
                 variant="contained"
                 sx={{
@@ -226,7 +224,7 @@ function Home() {
               >
                 Incomplete
               </Button>
-            </Box>
+            </Stack>
             <Box>
               <Button
                 sx={{
@@ -239,7 +237,7 @@ function Home() {
                 Delete All
               </Button>
             </Box>
-          </Box>
+          </Stack>
         )}
 
         <TablePage
@@ -249,8 +247,9 @@ function Home() {
           checkChange={check_change}
         />
       </Box>
-    </Box>
+    </Stack>
   );
 }
 
 export default Home;
+
