@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 
 function Home() {
   const [data, setData] = useState("");
-  const [arr, setArr] = useState([]);
+  const [toDoList, setToDoList] = useState([]);
   const [toggle, setToggle] = useState(true);
   const [IsEditItem, setIsEditItem] = useState(null);
   const [filterType, setFilterType] = useState("all");
@@ -20,7 +20,7 @@ function Home() {
       setErrors("");
     }
     if (data.trim() !== "" && !toggle) {
-      setArr((prevArr) =>
+      setToDoList((prevArr) =>
         prevArr.map((elem) => {
           if (elem.id === IsEditItem && data !== "") {
             return { ...elem, name: data };
@@ -35,7 +35,7 @@ function Home() {
     } else {
       if (data && data.trim() !== "") {
         const allInputData = { id: uuidv4(), name: data };
-        setArr([...arr, allInputData]);
+        setToDoList([...toDoList, allInputData]);
         setData("");
       } else {
         setErrors({ data: "Please enter  data in this field" });
@@ -45,15 +45,15 @@ function Home() {
   };
 
   const delete_todo = (index) => {
-    const updateditems = arr.filter((item) => {
+    const updateditems = toDoList.filter((item) => {
       return index !== item.id;
     });
-    setArr(updateditems);
+    setToDoList(updateditems);
     setErrors("");
   };
 
   const editItem = (id) => {
-    let newEditItem = arr.find((item) => {
+    let newEditItem = toDoList.find((item) => {
       return item.id === id;
     });
     setToggle(false);
@@ -74,7 +74,7 @@ function Home() {
     setErrors("");
   };
   const check_change = (id) => {
-    setArr((prevTodos) =>
+    setToDoList((prevTodos) =>
       prevTodos.map((e) => (e.id == id && { ...e, check: !e.check }))
     );
   };
@@ -82,24 +82,24 @@ function Home() {
   const filterItems = () => {
     switch (filterType) {
       case "all":
-        return arr;
+        return toDoList;
       case "completed":
-        const checked_data = arr.filter((item) => item.check);
+        const checked_data = toDoList.filter((item) => item.check);
         return checked_data;
       case "incomplete":
-        const unchecked_data = arr.filter((item) => !item.check);
+        const unchecked_data = toDoList.filter((item) => !item.check);
         return unchecked_data;
 
       default:
-        return arr;
+        return toDoList;
     }
   };
 
   const delete_check = () => {
-    const checkedData = arr.filter((item) => {
+    const checkedData = toDoList.filter((item) => {
       return !item.check;
     });
-    setArr(checkedData);
+    setToDoList(checkedData);
   };
   return (
     <Stack direction="column" alignItems="center" justifyContent="center" spacing={2} >
@@ -180,7 +180,7 @@ function Home() {
   )}
         </Box>
 
-        {arr.length > 0 && (
+        {toDoList.length > 0 && (
              <Stack
              direction={{ xs: "column", sm: "row" }}
              justifyContent="space-between"
@@ -241,7 +241,7 @@ function Home() {
         )}
 
         <TablePage
-          arr={filterItems()}
+          toDoList={filterItems()}
           deleteTodo={delete_todo}
           editTodo={editItem}
           checkChange={check_change}

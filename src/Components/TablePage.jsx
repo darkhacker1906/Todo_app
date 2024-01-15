@@ -13,13 +13,13 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import EditCalendarOutlined from "@mui/icons-material/EditCalendarOutlined";
 import { FormControlLabel, Checkbox } from "@mui/material";
 
-function TablePage({ arr, deleteTodo, editTodo, checkChange }) {
+function TablePage({ toDoList, deleteTodo, editTodo, checkChange }) {
   return (
     <Stack sx={{ mt: "2%", wordBreak: "break-word" }} spacing={2}>
       <TableContainer component={Paper}>
         <Table id="todos">
           <TableBody>
-            {arr.map((item) => (
+            {toDoList.map((item) => (
               <TableRow
                 sx={{
                   "&:hover": {
@@ -35,15 +35,21 @@ function TablePage({ arr, deleteTodo, editTodo, checkChange }) {
                 alignItems={{ xs: "flex-start", sm: "center" }}
                 spacing={{ xs: 1, sm: 0 }}
 >
-                    <Box>
+<Stack
+  direction="row"
+  justifyContent="space-between"
+  alignItems="center"
+  width="99%"     
+/>
+<Stack direction="row" alignItems="center">
                       <FormControlLabel
                         control={<Checkbox checked={item.check} />}
                         onClick={() => checkChange(item.id)}
                       />
 
                       {item.name}
-                    </Box>
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                    </Stack>
+                    <Stack sx={{ display: "flex", alignItems: "center" }}>
                       <DeleteOutlinedIcon
                         onClick={() => deleteTodo(item.id)}
                         sx={{
@@ -76,7 +82,7 @@ function TablePage({ arr, deleteTodo, editTodo, checkChange }) {
                           Completed
                         </Box>
                       ) }
-                    </Box>
+                    </Stack>
                   </Stack>
                 </TableCell>
               </TableRow>
